@@ -1,4 +1,4 @@
-package json;
+/*package json;
 
 import com.google.gson.*;
 import org.apache.commons.io.FileUtils;
@@ -182,3 +182,4 @@ public class Functionalities {
         return jsonString;
     }
 }
+*/
