@@ -7,19 +7,17 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class jsonToCsv {
+public class JsonToCsv {
 
-    private static final Logger logger = Logger.getLogger(jsonToCsv.class.getName());
+    private static final Logger logger = Logger.getLogger(JsonToCsv.class.getName());
 
     private String inputFilePath;
     private String outputFilePath;
 
-    public jsonToCsv(String inputFilePath, String outputFilePath) {
+    public JsonToCsv(String inputFilePath, String outputFilePath) {
         try {
             BufferedReader reader;
             if (inputFilePath.startsWith("http")) { // If the input is a URL

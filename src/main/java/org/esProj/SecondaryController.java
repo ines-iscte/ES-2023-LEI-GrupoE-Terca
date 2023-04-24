@@ -1,4 +1,4 @@
-package org.ESproj;
+package org.esProj;
 
 import java.io.IOException;
 import javafx.fxml.FXML;

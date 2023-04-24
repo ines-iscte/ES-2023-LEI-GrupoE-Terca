@@ -6,6 +6,6 @@ module org.ESproj {
     requires org.json;
     requires org.apache.commons.io;
 
-    opens org.ESproj to javafx.fxml;
-    exports org.ESproj;
+    opens org.esProj to javafx.fxml;
+    exports org.esProj;
 }
