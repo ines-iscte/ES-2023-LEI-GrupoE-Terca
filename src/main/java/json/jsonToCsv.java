@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 public class jsonToCsv {
 
-    private static final Logger logger = Logger.getLogger(csvToJson.class.getName());
+    private static final Logger logger = Logger.getLogger(jsonToCsv.class.getName());
 
     private String inputFilePath;
     private String outputFilePath;
