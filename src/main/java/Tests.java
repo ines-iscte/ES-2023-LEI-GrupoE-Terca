@@ -1,15 +1,11 @@
 //parte da inêsA
-//import json.Functionalities;
-//
-//import org.junit.Test;
-//
-//import java.io.ByteArrayInputStream;
-//import java.io.File;
-//import java.io.IOException;
-//import java.util.Scanner;
-//
+
+import json.csvToJson;
+
+import java.io.File;
+
 //import static org.junit.Assert.assertEquals;
-//
+
 //public class Tests {
 //    Functionalities func = new Functionalities();
 //
@@ -37,3 +33,14 @@
 //        assertEquals(test, file1);
 //    }
 //}
+/*
+    public void teste1() {
+        @Test
+        csvToJson teste_1 = new csvToJson("C:\\Users\\inesc\\OneDrive - ISCTE-IUL\\Documentos\\Iscte\\3º Ano\\2º Semestre\\ES\\ES-2023-LEI-GrupoE-Terca\\exemplo.csv", "C:\\Users\\inesc\\OneDrive - ISCTE-IUL\\Documentos\\Iscte\\3º Ano\\2º Semestre\\ES\\teste1.json");
+        String path1 = "C:\\Users\\inesc\\OneDrive - ISCTE-IUL\\Documentos\\Iscte\\3º Ano\\2º Semestre\\ES\\teste1.json";
+        String path2 = "C:\\Users\\inesc\\OneDrive - ISCTE-IUL\\Documentos\\Iscte\\3º Ano\\2º Semestre\\ES\\ES-2023-LEI-GrupoE-Terca\\arquivo.json";
+        File file1 = new File(path1);
+        File file2 = new File(path2);
+        assertEquals(file1.toString(), file2.toString());
+    }
+}*/
