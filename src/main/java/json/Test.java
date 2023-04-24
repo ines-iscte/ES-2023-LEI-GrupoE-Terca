@@ -1,22 +1,23 @@
 package json;
-import java.io.File;
-import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Test {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args){
+        final Logger logger = Logger.getLogger(Test.class.getName());
 
-        csvToJson teste_1 =  new csvToJson("C:\\Users\\inesc\\OneDrive - ISCTE-IUL\\Documentos\\Iscte\\3º Ano\\2º Semestre\\ES\\ES-2023-LEI-GrupoE-Terca\\exemplo.csv","C:\\Users\\maria\\Documents\\GitHub\\ES-2023-LEI-GrupoE-Terca\\exemplo1.json");
-        System.out.println("done 1");
+        CsvToJson teste1 =  new CsvToJson("C:\\Users\\inesc\\OneDrive - ISCTE-IUL\\Documentos\\Iscte\\3º Ano\\2º Semestre\\ES\\ES-2023-LEI-GrupoE-Terca\\exemplo.csv","C:\\Users\\maria\\Documents\\GitHub\\ES-2023-LEI-GrupoE-Terca\\exemplo1.json");
+        logger.log(Level.INFO, "Done 1");
 
-        csvToJson teste_2 = new csvToJson("https://raw.githubusercontent.com/anamoreira-iscte/ES-2023-LEI-GrupoE-Terca/main/exemplo.csv","C:\\Users\\maria\\Documents\\GitHub\\ES-2023-LEI-GrupoE-Terca\\exemplo2.json");
-        System.out.println("done 2");
+        CsvToJson teste2 = new CsvToJson("https://raw.githubusercontent.com/anamoreira-iscte/ES-2023-LEI-GrupoE-Terca/main/exemplo.csv","C:\\Users\\maria\\Documents\\GitHub\\ES-2023-LEI-GrupoE-Terca\\exemplo2.json");
+        logger.log(Level.INFO, "Done 2");
 
-        jsonToCsv teste_3 = new jsonToCsv("C:\\Users\\maria\\Documents\\GitHub\\ES-2023-LEI-GrupoE-Terca\\arquivo.json","C:\\Users\\maria\\Documents\\GitHub\\ES-2023-LEI-GrupoE-Terca\\arquivo1.csv");
-        System.out.println("done 3");
+        JsonToCsv teste3 = new JsonToCsv("C:\\Users\\maria\\Documents\\GitHub\\ES-2023-LEI-GrupoE-Terca\\arquivo.json","C:\\Users\\maria\\Documents\\GitHub\\ES-2023-LEI-GrupoE-Terca\\arquivo1.csv");
+        logger.log(Level.INFO, "Done 3");
 
-        jsonToCsv teste_4 = new jsonToCsv("https://raw.githubusercontent.com/anamoreira-iscte/ES-2023-LEI-GrupoE-Terca/main/arquivo.json","C:\\Users\\maria\\Documents\\GitHub\\ES-2023-LEI-GrupoE-Terca\\arquivo2.csv");
-        System.out.println("done 4");
+        JsonToCsv teste4 = new JsonToCsv("https://raw.githubusercontent.com/anamoreira-iscte/ES-2023-LEI-GrupoE-Terca/main/arquivo.json","C:\\Users\\maria\\Documents\\GitHub\\ES-2023-LEI-GrupoE-Terca\\arquivo2.csv");
+        logger.log(Level.INFO, "Done 4");
     }
 
    /* public void teste1 (){

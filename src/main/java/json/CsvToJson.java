@@ -7,14 +7,14 @@ import java.net.URL;
 import java.util.*;
 import java.util.logging.*;
 
-public class csvToJson {
+public class CsvToJson {
 
-    private static final Logger logger = Logger.getLogger(csvToJson.class.getName());
+    private static final Logger logger = Logger.getLogger(CsvToJson.class.getName());
 
     private String inputFilePath;
     private String outputFilePath;
 
-    public csvToJson(String inputFilePath, String outputFilePath) {
+    public CsvToJson(String inputFilePath, String outputFilePath) {
         try {
 
             BufferedReader reader;
