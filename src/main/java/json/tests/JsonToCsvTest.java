@@ -16,11 +16,12 @@ class JsonToCsvTest {
     private File expectedFile = new File("C:\\Users\\inesc\\OneDrive - ISCTE-IUL\\Documentos\\Iscte\\3º Ano\\2º Semestre\\ES\\ES-2023-LEI-GrupoE-Terca\\TestCSV.csv");
     private String path1 = "C:\\Users\\inesc\\OneDrive - ISCTE-IUL\\Documentos\\Iscte\\3º Ano\\2º Semestre\\ES\\ES-2023-LEI-GrupoE-Terca\\arquivo.json";
     private String path2 = "https://raw.githubusercontent.com/ines-iscte/ES-2023-LEI-GrupoE-Terca/main/arquivo.json";
+    private String outputPaths = "C:\\Users\\inesc\\OneDrive - ISCTE-IUL\\Documentos\\Iscte\\3º Ano\\2º Semestre\\ES";
 
     @Test
     void jsonToCsv1() {
         //Criação de ficheiro Csv, com ficheiro local
-        String outputPath = "C:\\Users\\inesc\\OneDrive - ISCTE-IUL\\Documentos\\Iscte\\3º Ano\\2º Semestre\\ES\\teste1.json";
+        String outputPath = outputPaths + "\\teste1.csv";
         test.jsonToCsv(path1, outputPath);
         File outputFile = new File(outputPath);
         assertTrue(outputFile.exists());
@@ -29,7 +30,7 @@ class JsonToCsvTest {
     @Test
     void jsonToCsv2() throws IOException {
         //Ficheiro Csv igual a ficheiro de controlo, com ficheiro local
-        String outputPath = "C:\\Users\\inesc\\OneDrive - ISCTE-IUL\\Documentos\\Iscte\\3º Ano\\2º Semestre\\ES\\teste2.json";
+        String outputPath = outputPaths + "\\teste2.csv";
         test.jsonToCsv(path1, outputPath);
         File outputFile = new File(outputPath);
 
@@ -47,7 +48,7 @@ class JsonToCsvTest {
     @Test
     void jsonToCsv3(){
         //Criação de ficheiro Csv, com ficheiro remoto
-        String outputPath = "C:\\Users\\inesc\\OneDrive - ISCTE-IUL\\Documentos\\Iscte\\3º Ano\\2º Semestre\\ES\\teste3.json";
+        String outputPath = outputPaths + "\\teste3.csv";
         test.jsonToCsv(path2, outputPath);
         File outputFile = new File(outputPath);
         assertTrue(outputFile.exists());
@@ -56,7 +57,7 @@ class JsonToCsvTest {
     @Test
     void jsonToCsv4() throws IOException {
         //Ficheiro Csv igual a ficheiro de controlo, com ficheiro remoto
-        String outputPath = "C:\\Users\\inesc\\OneDrive - ISCTE-IUL\\Documentos\\Iscte\\3º Ano\\2º Semestre\\ES\\teste4.json";
+        String outputPath = outputPaths + "\\teste4.csv";
         test.jsonToCsv(path2, outputPath);
         File outputFile = new File(outputPath);
 
