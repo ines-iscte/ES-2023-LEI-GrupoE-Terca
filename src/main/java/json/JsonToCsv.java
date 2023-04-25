@@ -17,7 +17,7 @@ public class JsonToCsv {
     private String inputFilePath;
     private String outputFilePath;
 
-    public JsonToCsv(String inputFilePath, String outputFilePath) {
+    public void jsonToCsv(String inputFilePath, String outputFilePath) {
         try {
             BufferedReader reader;
             if (inputFilePath.startsWith("http")) { // If the input is a URL

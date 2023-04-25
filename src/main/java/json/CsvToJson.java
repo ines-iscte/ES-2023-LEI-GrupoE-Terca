@@ -14,7 +14,7 @@ public class CsvToJson {
     private String inputFilePath;
     private String outputFilePath;
 
-    public CsvToJson(String inputFilePath, String outputFilePath) {
+    public void csvToJson(String inputFilePath, String outputFilePath) {
         try {
 
             BufferedReader reader;
