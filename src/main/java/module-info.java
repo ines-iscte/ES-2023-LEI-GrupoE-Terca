@@ -7,6 +7,9 @@ module org.ESproj {
     requires org.apache.commons.io;
     requires org.junit.jupiter.api;
     requires junit;
+    requires fr.brouillard.oss.cssfx;
+    requires transitive javafx.graphics;
+    requires com.calendarfx.view;
 
     opens org.esProj to javafx.fxml;
     exports org.esProj;
