@@ -1,9 +1,9 @@
 package org.esProj;
 
-import com.calendarfx.model.Calendar;
+import com.calendarfx.model.*;
 import com.calendarfx.model.Calendar.Style;
-import com.calendarfx.model.CalendarSource;
 import com.calendarfx.view.CalendarView;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import fr.brouillard.oss.cssfx.CSSFX;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -12,21 +12,63 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.calendarfx.model.Calendar;
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+
+import static java.sql.DriverManager.println;
 
 public class CalendarApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+
+        String jsonFilePath = "C:\\Users\\Nicole\\OneDrive - ISCTE-IUL\\3o Ano\\2oSem\\ES\\ProjetoCerto\\ES-2023-LEI-GrupoE-Terca\\arquivo.json";
+
+        Calendar calendar = new Calendar("My Calendar");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        // Read the JSON file and parse it into a JsonNode object
+        JsonNode rootNode = objectMapper.readTree(new File(jsonFilePath));
+
+        // Get the array of events from the JSON file
+        ObjectNode events = (ObjectNode) rootNode;
+
+        // Loop through each event in the array
+        for (JsonNode event : events) {
+            if (event != null) {
+                String title = event.get("Unidade Curricular").asText();
+                println(title);
+                String description = event.get("Turno").asText() + " - " + event.get("Turma").asText();
+                String location = event.get("Sala atribuida a aula").asText();
+                String startDateTimeString = event.get("Data da aula").asText() + " " + event.get("Hora inicio da aula").asText();
+                String endDateTimeString = event.get("Data da aula").asText() + " " + event.get("Hora fim da aula").asText();
+
+                // Convert the start and end date/time strings into Java Date objects
+                Date startDateTime = Date.from(LocalDateTime.parse(startDateTimeString, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")).atZone(ZoneId.systemDefault()).toInstant());
+                Date endDateTime = Date.from(LocalDateTime.parse(endDateTimeString, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")).atZone(ZoneId.systemDefault()).toInstant());
+            }else{
+                println("calhou coco");
+            }
+        }
+
         CalendarView calendarView = new CalendarView();
         calendarView.setEnableTimeZoneSupport(true);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("homePage.fxml"));
         Parent root = loader.load();
         HomePage controller = loader.getController();
-
+    }
+/*
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Minha aplicação JavaFX");
@@ -55,9 +97,9 @@ public class CalendarApp extends Application {
         armin.setStyle(Style.STYLE5);
         birthdays.setStyle(Style.STYLE6);
         holidays.setStyle(Style.STYLE7);
-*/
+
         CalendarSource familyCalendarSource = new CalendarSource("Family");
-    //    familyCalendarSource.getCalendars().addAll(birthdays, holidays, katja, dirk, philip, jule, armin);
+       familyCalendarSource.getCalendars().addAll(birthdays, holidays, katja, dirk, philip, jule, armin);
 
         calendarView.getCalendarSources().setAll(familyCalendarSource);
         calendarView.setRequestedTime(LocalTime.now());
@@ -100,7 +142,7 @@ public class CalendarApp extends Application {
         primaryStage.centerOnScreen();
         primaryStage.show();
     }
-
+*/
     public static void main(String[] args) {
         launch(args);
     }
