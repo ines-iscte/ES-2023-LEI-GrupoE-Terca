@@ -6,7 +6,10 @@ module org.ESproj {
     requires org.json;
     requires org.apache.commons.io;
     requires org.junit.jupiter.api;
+    requires org.junit.platform.commons;
     requires junit;
+    requires java.logging;
+    requires net.sf.biweekly;
     opens org.esProj to javafx.fxml;
     exports org.esProj;
 }
