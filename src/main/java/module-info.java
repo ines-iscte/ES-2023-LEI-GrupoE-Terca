@@ -11,6 +11,8 @@ module org.ESproj {
     requires junit;
     requires java.logging;
     requires net.sf.biweekly;
+    requires com.calendarfx.view;
+    requires fr.brouillard.oss.cssfx;
     opens org.esProj to javafx.fxml;
     exports org.esProj;
 }
