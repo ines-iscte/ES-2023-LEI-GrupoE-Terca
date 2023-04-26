@@ -7,20 +7,31 @@ import com.calendarfx.view.CalendarView;
 import fr.brouillard.oss.cssfx.CSSFX;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class CalendarApp extends Application {
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws IOException {
         CalendarView calendarView = new CalendarView();
         calendarView.setEnableTimeZoneSupport(true);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("homePage.fxml"));
+        Parent root = loader.load();
+        HomePage controller = loader.getController();
 
+        Scene scene = new Scene(root);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Minha aplicação JavaFX");
+        primaryStage.show();
+/*
         Calendar katja = new Calendar("Katja");
         Calendar dirk = new Calendar("Dirk");
         Calendar philip = new Calendar("Philip");
@@ -44,9 +55,9 @@ public class CalendarApp extends Application {
         armin.setStyle(Style.STYLE5);
         birthdays.setStyle(Style.STYLE6);
         holidays.setStyle(Style.STYLE7);
-
+*/
         CalendarSource familyCalendarSource = new CalendarSource("Family");
-        familyCalendarSource.getCalendars().addAll(birthdays, holidays, katja, dirk, philip, jule, armin);
+    //    familyCalendarSource.getCalendars().addAll(birthdays, holidays, katja, dirk, philip, jule, armin);
 
         calendarView.getCalendarSources().setAll(familyCalendarSource);
         calendarView.setRequestedTime(LocalTime.now());
@@ -78,7 +89,7 @@ public class CalendarApp extends Application {
         updateTimeThread.setDaemon(true);
         updateTimeThread.start();
 
-        Scene scene = new Scene(stackPane);
+        scene.setRoot(stackPane);
         scene.focusOwnerProperty().addListener(it -> System.out.println("focus owner: " + scene.getFocusOwner()));
         CSSFX.start(scene);
 
