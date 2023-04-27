@@ -32,7 +32,8 @@ public class CalendarApp extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
 
-        String jsonFilePath = "C:\\Users\\Nicole\\OneDrive - ISCTE-IUL\\3o Ano\\2oSem\\ES\\ProjetoCerto\\ES-2023-LEI-GrupoE-Terca\\arquivo.json";
+        //String jsonFilePath = "C:\\Users\\Nicole\\OneDrive - ISCTE-IUL\\3o Ano\\2oSem\\ES\\ProjetoCerto\\ES-2023-LEI-GrupoE-Terca\\arquivo.json";
+        String jsonFilePath = "C:\\Users\\inesc\\OneDrive - ISCTE-IUL\\2º semestre\\ES\\ES-2023-LEI-GrupoE-Terca\\arquivo.json";
 
         Calendar calendar = new Calendar("My Calendar");
 
@@ -40,33 +41,63 @@ public class CalendarApp extends Application {
 
         // Read the JSON file and parse it into a JsonNode object
         JsonNode rootNode = objectMapper.readTree(new File(jsonFilePath));
+        System.out.println(rootNode);
 
         // Get the array of events from the JSON file
-        ObjectNode events = (ObjectNode) rootNode;
+        ArrayNode events = (ArrayNode) rootNode.get("aulas");
 
         // Loop through each event in the array
         for (JsonNode event : events) {
+            System.out.println(event);
             if (event != null) {
                 String title = event.get("Unidade Curricular").asText();
                 println(title);
                 String description = event.get("Turno").asText() + " - " + event.get("Turma").asText();
-                String location = event.get("Sala atribuida a aula").asText();
+                //estava a dar erro pq algumas aulas n tinham sala atribuida
+                if(event.get("Sala atribuida a aula") != null){
+                    String location = event.get("Sala atribuida a aula").asText();}
                 String startDateTimeString = event.get("Data da aula").asText() + " " + event.get("Hora inicio da aula").asText();
                 String endDateTimeString = event.get("Data da aula").asText() + " " + event.get("Hora fim da aula").asText();
 
                 // Convert the start and end date/time strings into Java Date objects
                 Date startDateTime = Date.from(LocalDateTime.parse(startDateTimeString, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")).atZone(ZoneId.systemDefault()).toInstant());
                 Date endDateTime = Date.from(LocalDateTime.parse(endDateTimeString, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")).atZone(ZoneId.systemDefault()).toInstant());
+
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                LocalDate localDate1 = LocalDate.parse(event.get("Data da aula").asText(), formatter);
+                LocalDate localDate2 = LocalDate.parse(event.get("Data da aula").asText(), formatter);
+
+                LocalDateTime startDateTime1 = LocalDateTime.ofInstant(startDateTime.toInstant(), ZoneId.systemDefault());
+                LocalDateTime endDateTime1 = LocalDateTime.ofInstant(endDateTime.toInstant(), ZoneId.systemDefault());
+
+                Entry entry = new Entry(title);
+                entry.setInterval(startDateTime1, endDateTime1);
+                calendar.addEntry(entry);
+                System.out.println(entry);
             }else{
                 println("calhou coco");
             }
         }
-
         CalendarView calendarView = new CalendarView();
+        CalendarSource familyCalendarSource = new CalendarSource("Family");
+        familyCalendarSource.getCalendars().addAll(calendar);
+
+        calendarView.getCalendarSources().setAll(familyCalendarSource);
+
         calendarView.setEnableTimeZoneSupport(true);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("homePage.fxml"));
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().addAll(calendarView);
+        FXMLLoader loader =new FXMLLoader(App.class.getResource("homePage.fxml"));
         Parent root = loader.load();
         HomePage controller = loader.getController();
+        Scene scene = new Scene(root);
+        primaryStage.setTitle("Calendar");
+        primaryStage.setScene(scene);
+        primaryStage.setWidth(700);
+        primaryStage.setHeight(600);
+        primaryStage.centerOnScreen();
+        primaryStage.show();
     }
 /*
         Scene scene = new Scene(root);

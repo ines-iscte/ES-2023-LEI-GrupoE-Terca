@@ -802,7 +802,9 @@
       "Dia da semana": "Sex",
       "Hora inicio da aula": "13:00:00",
       "Hora fim da aula": "14:30:00",
-      "Data da aula": "16/09/2022"
+      "Data da aula": "16/09/2022",
+      "Sala atribuida a aula": "C5.06",
+      "Lotacao da sala": "70"
     },
     {
       "﻿Curso": "DF",
