@@ -1,4 +1,4 @@
-package json.tests;
+package json;
 
 import json.Webcal;
 
