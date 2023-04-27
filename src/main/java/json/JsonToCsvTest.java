@@ -1,22 +1,21 @@
-package json.tests;
+package json;
 
-import json.JsonToCsv;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.*;
+import json.JsonToCsv;
+import org.junit.jupiter.api.Test;
 
 class JsonToCsvTest {
     private static JsonToCsv test=new JsonToCsv();
-    private File expectedFile = new File("C:\\Users\\inesc\\OneDrive - ISCTE-IUL\\Documentos\\Iscte\\3º Ano\\2º Semestre\\ES\\ES-2023-LEI-GrupoE-Terca\\TestCSV.csv");
-    private String path1 = "C:\\Users\\inesc\\OneDrive - ISCTE-IUL\\Documentos\\Iscte\\3º Ano\\2º Semestre\\ES\\ES-2023-LEI-GrupoE-Terca\\arquivo.json";
+    private File expectedFile = new File("C:\\Users\\maria\\Documents\\GitHub\\ES-2023-LEI-GrupoE-Terca\\TestCSV.csv");
+    private String path1 = "C:\\Users\\maria\\Documents\\GitHub\\ES-2023-LEI-GrupoE-Terca\\arquivo.json";
     private String path2 = "https://raw.githubusercontent.com/ines-iscte/ES-2023-LEI-GrupoE-Terca/main/arquivo.json";
-    private String outputPaths = "C:\\Users\\inesc\\OneDrive - ISCTE-IUL\\Documentos\\Iscte\\3º Ano\\2º Semestre\\ES";
+    private String outputPaths = "C:\\Users\\maria\\Documents\\GitHub\\ES-2023-LEI-GrupoE-Terca";
 
     @Test
     void jsonToCsv1() {
@@ -70,5 +69,15 @@ class JsonToCsvTest {
             String expectedLine = expectedLines.get(i).replaceAll("\\s+", "");
             assertEquals(outputLine, expectedLine);
         }
+    }
+
+    @Test
+    void jsonToCsv5(){
+        //Não criação de ficheiro, dado path não existente
+        String outputPath = outputPaths + "\\teste5.csv";
+        String pathErrado = "C:\\Users\\inesc\\OneDrive - ISCTE-IUL\\Documentos\\Iscte\\3º Ano\\2º Semestre\\ES\\ES-2023-LEI-GrupoE-Terca\\test5.json";
+        test.jsonToCsv(pathErrado, outputPath);
+        File outputFile = new File(outputPath);
+        assertFalse(outputFile.exists());
     }
 }
