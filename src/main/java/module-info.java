@@ -21,7 +21,6 @@ module org.ESproj {
 
     requires com.calendarfx.view;
     requires fr.brouillard.oss.cssfx;
-    requires com.fasterxml.jackson.databind;
     requires java.sql;
 
     opens org.esProj to javafx.fxml;
