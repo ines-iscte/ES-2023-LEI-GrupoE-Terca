@@ -1,16 +1,11 @@
 package org.esProj;
 
 import com.calendarfx.model.*;
-import com.calendarfx.model.Calendar.Style;
 import com.calendarfx.view.CalendarView;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import fr.brouillard.oss.cssfx.CSSFX;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,46 +13,44 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.calendarfx.model.Calendar;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 
-import static java.sql.DriverManager.println;
-
 public class CalendarApp extends Application {
 
     ArrayList<String> courses = new ArrayList();
+    String jsonFilePath = "arquivo.json";
+    Calendar calendar = new Calendar("My Calendar");
+    ObjectMapper objectMapper = new ObjectMapper();
+    JsonNode rootNode;
+    {
+        try {
+            rootNode = objectMapper.readTree(new File(jsonFilePath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //System.out.println(rootNode);
+    ArrayNode events = (ArrayNode) rootNode.get("aulas");
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-
-        String jsonFilePath = "arquivo.json";
-        Calendar calendar = new Calendar("My Calendar");
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        // Read the JSON file and parse it into a JsonNode object
-        JsonNode rootNode = objectMapper.readTree(new File(jsonFilePath));
-        //System.out.println(rootNode);
-
-        // Get the array of events from the JSON file
-        ArrayNode events = (ArrayNode) rootNode.get("aulas");
 
         // Loop through each event in the array
         for (JsonNode event : events) {
             //System.out.println(event);
             if (event != null) {
-               if(!(courses.contains(event.get("﻿Curso").asText())) || courses.isEmpty() ){
+          /*     if(!(courses.contains(event.get("﻿Curso").asText())) || courses.isEmpty() ){
                   courses.add((event.get("﻿Curso").asText()));
                }
-
+*/
                 String title = event.get("Unidade Curricular").asText();
                 //System.out.println(title);
                 String description = event.get("Turno").asText() + " - " + event.get("Turma").asText();
@@ -87,7 +80,6 @@ public class CalendarApp extends Application {
                 System.out.println("A aula não existe!");
             }
         }
-        //System.out.println(courses);
 
 
         /*for (Object c : courses) {
@@ -112,13 +104,30 @@ public class CalendarApp extends Application {
         primaryStage.setHeight(600);
         primaryStage.centerOnScreen();
         primaryStage.show();
+        loadData();
+        printCourses();
     }
 
-    public ArrayList<String> getCourses() {
-        return courses;
+    private void printCourses() {
+        for(String c: courses){
+            System.out.println(c);
+        }
     }
-    public void setCourses(ArrayList<String> courses) {
-        this.courses = courses;
+
+
+    public void loadData() {
+        for (JsonNode event : events) {
+            //System.out.println(event);
+            if (event != null) {
+                if(!(courses.contains(event.get("﻿Curso").asText())) || courses.isEmpty() ){
+                    courses.add((event.get("﻿Curso").asText()));
+                }
+            }
+        }
+    }
+
+    public ArrayList<String> getCourses(){
+        return courses;
     }
 
 
