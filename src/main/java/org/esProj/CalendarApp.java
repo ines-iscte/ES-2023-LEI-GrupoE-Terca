@@ -104,7 +104,6 @@ public class CalendarApp extends Application {
         primaryStage.setHeight(600);
         primaryStage.centerOnScreen();
         primaryStage.show();
-        loadData();
         printCourses();
     }
 
@@ -114,7 +113,7 @@ public class CalendarApp extends Application {
         }
     }
 
-
+/*
     public void loadData() {
         for (JsonNode event : events) {
             //System.out.println(event);
@@ -130,7 +129,7 @@ public class CalendarApp extends Application {
         return courses;
     }
 
-
+*/
 
     /*
                 Scene scene = new Scene(root);
