@@ -24,7 +24,7 @@ import java.util.Date;
 
 public class CalendarApp extends Application {
 
-    ArrayList<String> courses = new ArrayList();
+    ArrayList<String> courses = new ArrayList<>();
     String jsonFilePath = "arquivo.json";
     Calendar calendar = new Calendar("My Calendar");
     ObjectMapper objectMapper = new ObjectMapper();
@@ -75,7 +75,8 @@ public class CalendarApp extends Application {
                 Entry entry = new Entry(title);
                 entry.setInterval(startDateTime1, endDateTime1);
                 calendar.addEntry(entry);
-                //System.out.println(entry);
+                System.out.println(entry);
+
             }else{
                 System.out.println("A aula não existe!");
             }
@@ -90,21 +91,6 @@ public class CalendarApp extends Application {
         CalendarSource familyCalendarSource = new CalendarSource("Family");
         familyCalendarSource.getCalendars().addAll(calendar);
         calendarView.getCalendarSources().setAll(familyCalendarSource);
-
-        calendarView.setEnableTimeZoneSupport(true);
-        StackPane stackPane = new StackPane();
-        stackPane.getChildren().addAll(calendarView);
-        FXMLLoader loader =new FXMLLoader(App.class.getResource("homePage.fxml"));
-        Parent root = loader.load();
-        HomePage controller = loader.getController();
-        Scene scene = new Scene(root);
-        primaryStage.setTitle("Calendar");
-        primaryStage.setScene(scene);
-        primaryStage.setWidth(700);
-        primaryStage.setHeight(600);
-        primaryStage.centerOnScreen();
-        primaryStage.show();
-        printCourses();
     }
 
     private void printCourses() {
@@ -113,7 +99,7 @@ public class CalendarApp extends Application {
         }
     }
 
-/*
+
     public void loadData() {
         for (JsonNode event : events) {
             //System.out.println(event);
@@ -129,7 +115,7 @@ public class CalendarApp extends Application {
         return courses;
     }
 
-*/
+
 
     /*
                 Scene scene = new Scene(root);

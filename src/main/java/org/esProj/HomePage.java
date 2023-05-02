@@ -9,20 +9,22 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class HomePage implements Initializable {
+public class HomePage {
 
-    //private ArrayList<String> courses = new ArrayList<String>();
+    private ArrayList<String> courses = new ArrayList<String>();
     CalendarApp calendar = new CalendarApp();
 
-    //@FXML
-    //private ChoiceBox<String> cursosDropDown;
+    @FXML
+    private ChoiceBox<String> cursosDropDown;
 
 
 
@@ -31,7 +33,7 @@ public class HomePage implements Initializable {
 
         CalendarView calendarView = new CalendarView();
         calendarView.setEnableTimeZoneSupport(true);
-        //ChoiceBox<String> coursesDropDown = new ChoiceBox<>();
+        ChoiceBox<String> coursesDropDown = new ChoiceBox<>();
 
         Scene scene = new Scene(new StackPane(calendarView));
         Stage stage = new Stage();
@@ -44,11 +46,13 @@ public class HomePage implements Initializable {
 
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        //calendar.loadData();
-        //ArrayList<String> courses = calendar.getCourses();
-        //cursosDropDown.getItems().addAll(courses);
-      openCalendar();
+    public void chooseFile(MouseEvent mouseEvent, Stage stage) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Text Files", "*.txt"),
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"),
+                new FileChooser.ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
+                new FileChooser.ExtensionFilter("All Files", "*.*"));
+        fileChooser.showOpenDialog(stage);
     }
 }
