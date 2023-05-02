@@ -23,7 +23,7 @@ module org.ESproj {
     requires fr.brouillard.oss.cssfx;
     requires java.sql;
 
-    requires jdk.incubator.httpclient; // needed for making HTTP requests from Node.js
+   /*requires jdk.incubator.httpclient; // needed for making HTTP requests from Node.js
     requires jdk.internal.vm.ci; // needed for using the Nashorn JavaScript engine
     requires jdk.scripting.nashorn; // needed for using the Nashorn JavaScript engine
     requires jdk.jsobject; // needed for using the Nashorn JavaScript engine
@@ -37,7 +37,7 @@ module org.ESproj {
     requires org.json;
     requires jackson.databind;
     requires node;
-    requires npm;
+    requires npm;*/
 
 
     opens org.esProj to javafx.fxml;
