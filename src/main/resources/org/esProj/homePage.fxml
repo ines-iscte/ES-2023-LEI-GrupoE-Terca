@@ -3,10 +3,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.esProj.CalendarAppLauncher">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.esProj.CalendarAppLauncher">
    <children>
       <Button fx:id="chooseFiles" layoutX="80.0" layoutY="120.0" mnemonicParsing="false" onMouseClicked="#chooseFile" text="Escolha o ficheiro" />
       <Button fx:id="converterButton" layoutX="420.0" layoutY="120.0" mnemonicParsing="false" onMouseClicked="#convert" text="Converter" />
-      <Button fx:id="visualize" layoutX="250.0" layoutY="250.0" mnemonicParsing="false" onMouseClicked="#showCalendar" text="Visualizar horário" />
+      <Button fx:id="visualize" layoutX="246.0" layoutY="200.0" mnemonicParsing="false" onMouseClicked="#showCalendar" text="Visualizar horário" />
+      <TextField id="webCal" fx:id="webCal" layoutX="93.0" layoutY="292.0" promptText="webCalendar" onAction="#handleButtonAction" />
+      <Button id="webcalButton" fx:id="webcalButton" layoutX="242.0" layoutY="292.0" mnemonicParsing="false" onMouseClicked="#showWebCalendar" text="Go" />
    </children>
 </Pane>

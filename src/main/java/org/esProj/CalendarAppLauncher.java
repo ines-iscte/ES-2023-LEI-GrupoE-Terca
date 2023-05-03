@@ -1,39 +1,52 @@
 package org.esProj;
 
+import biweekly.component.VEvent;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.CalendarView;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import javafx.application.Application;
+import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import json.CsvToJson;
 import json.JsonToCsv;
+import json.Webcal;
+import org.json.JSONObject;
 
-import java.io.File;
-import java.io.IOException;
+import java.awt.event.ActionEvent;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
+
+import static json.Webcal.getEventsFromWebcal;
 
 public class CalendarAppLauncher extends Application {
 
     private static Scene scene;
     private File file;
     private String jsonPATH;
+    private String webCalLink;
+
+    @FXML
+    private TextField webCal;
+
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -48,7 +61,7 @@ public class CalendarAppLauncher extends Application {
     }
 
     private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(CalendarAppLauncher.class.getResource(fxml + ".fxml"));
         return fxmlLoader.load();
     }
 
@@ -62,6 +75,7 @@ public class CalendarAppLauncher extends Application {
                 new FileChooser.ExtensionFilter("JSON", "*.json"),
                 new FileChooser.ExtensionFilter("CSV", "*.csv"));
         file = fileChooser.showOpenDialog(scene.getWindow());
+      jsonPATH = file.getAbsolutePath();
     }
 
     public void convert(MouseEvent mouseEvent) {
@@ -101,7 +115,7 @@ public class CalendarAppLauncher extends Application {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode rootNode = null;
         try {
-            rootNode = objectMapper.readTree(new File(jsonFilePath));
+            rootNode = objectMapper.readTree(new File(jsonPATH));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -116,14 +130,17 @@ public class CalendarAppLauncher extends Application {
                   courses.add((event.get("﻿Curso").asText()));
                }
 */
-                String title = event.get("Unidade Curricular").asText();
+/*
+              String title = event.get("Unidade Curricular").asText();
                 //System.out.println(title);
                 String description = event.get("Turno").asText() + " - " + event.get("Turma").asText();
                 //estava a dar erro pq algumas aulas n tinham sala atribuida
                 if (event.get("Sala atribuida a aula") != null) {
                     String location = event.get("Sala atribuida a aula").asText();
                 }
-                String startDateTimeString = event.get("Data da aula").asText() + " " + event.get("Hora inicio da aula").asText();
+              if (event.get("Data da aula") != null && event.get("Hora início da aula") != null && event.get("Hora fim da aula")!=null) {
+                String startDateTimeString = event.get("Data da aula").asText() + " " + event.get("Hora início da aula").asText();
+
                 String endDateTimeString = event.get("Data da aula").asText() + " " + event.get("Hora fim da aula").asText();
 
                 // Convert the start and end date/time strings into Java Date objects
@@ -134,13 +151,96 @@ public class CalendarAppLauncher extends Application {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 LocalDate localDate1 = LocalDate.parse(event.get("Data da aula").asText(), formatter);
                 LocalDate localDate2 = LocalDate.parse(event.get("Data da aula").asText(), formatter);
-                //java.util.Date.from( startDateTime.atStartOfDay( ZoneId.of( "America/Montreal" ) )  .toInstant());
                 LocalDateTime startDateTime1 = LocalDateTime.ofInstant(startDateTime.toInstant(), ZoneId.systemDefault());
                 LocalDateTime endDateTime1 = LocalDateTime.ofInstant(endDateTime.toInstant(), ZoneId.systemDefault());
+                System.out.println(startDateTime1);
 
                 Entry entry = new Entry(title);
                 entry.setInterval(startDateTime1, endDateTime1);
                 calendar.addEntry(entry);
+              }
+*/
+              String title = event.get("summary").asText();
+              String allDateStart = event.get("start").asText();
+              String[] dateStartString = allDateStart.split(" ");
+              String dateStartMonth = dateStartString[1];
+
+              String allDateEnd = event.get("end").asText();
+              String[] dateEndString = allDateStart.split(" ");
+              String dateEndMonth = dateEndString[1];
+
+              Map<String, Integer> monthMap = new HashMap<>();
+              monthMap.put("Jan", 1);
+              monthMap.put("Feb", 2);
+              monthMap.put("Mar", 3);
+              monthMap.put("Apr", 4);
+              monthMap.put("May", 5);
+              monthMap.put("Jun", 6);
+              monthMap.put("Jul", 7);
+              monthMap.put("Aug", 8);
+              monthMap.put("Sep", 9);
+              monthMap.put("Oct", 10);
+              monthMap.put("Nov", 11);
+              monthMap.put("Dec", 12);
+
+              int monthStartNumber = monthMap.get(dateStartMonth);
+
+
+              String startDateTimeString = dateStartString[5] + "-" + monthStartNumber + "-" + dateStartString[2] + " " + dateStartString[0] +" " + dateStartString[3] +" "+ dateStartString[4];
+              String endDateTimeString = dateEndString[5] + "-" + monthStartNumber + "-" + dateEndString[2] + " " + dateEndString[0] +" " + dateEndString[3] +" "+ dateEndString[4];
+/*
+              Date dateStart = Date.from(LocalDateTime.parse(startDateTimeString, DateTimeFormatter.ofPattern("www MM dd HH:mm:ss zzz yyyy")).atZone(ZoneId.systemDefault()).toInstant());
+              Date dateEnd = Date.from(LocalDateTime.parse(endDateTimeString, DateTimeFormatter.ofPattern("www MM dd HH:mm:ss zzz yyyy")).atZone(ZoneId.systemDefault()).toInstant());
+
+              DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy");
+              LocalDateTime dateTimeStart = LocalDateTime.parse(dateStart, formatter);
+
+              System.out.println(dateTimeStart);
+
+
+
+
+              int monthEndNumber = monthMap.get(dateEndMonth);
+
+              LocalDate localDate1 = LocalDate.parse(event.get("Data da aula").asText(), formatter);
+              LocalDate localDate2 = LocalDate.parse(event.get("Data da aula").asText(), formatter);
+              LocalDateTime startDateTime1 = LocalDateTime.ofInstant(startDateTime.toInstant(), ZoneId.systemDefault());
+              LocalDateTime endDateTime1 = LocalDateTime.ofInstant(endDateTime.toInstant(), ZoneId.systemDefault());
+
+              Entry entry = new Entry(title);
+              entry.setInterval(dateTimeStart, dateTimeEnd);
+
+              System.out.println(dateTimeEnd);*/
+
+
+
+
+
+
+
+
+
+
+
+              // Convert the start and end date/time strings into Java Date objects
+              Date dateStart = Date.from(LocalDateTime.parse(startDateTimeString, DateTimeFormatter.ofPattern("yyyy-MM-dd zzz HH:mm:ss EEEE")).atZone(ZoneId.systemDefault()).toInstant());
+              Date dateEnd = Date.from(LocalDateTime.parse(endDateTimeString, DateTimeFormatter.ofPattern("yyyy-MM-dd zzz HH:mm:ss EEEE")).atZone(ZoneId.systemDefault()).toInstant());
+
+
+              DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy");
+              LocalDate localDate1 = LocalDate.parse(event.get("start").asText(), formatter);
+              LocalDate localDate2 = LocalDate.parse(event.get("end").asText(), formatter);
+              LocalDateTime startDateTime1 = LocalDateTime.ofInstant(dateStart.toInstant(), ZoneId.systemDefault());
+              LocalDateTime endDateTime1 = LocalDateTime.ofInstant(dateStart.toInstant(), ZoneId.systemDefault());
+
+              Entry entry = new Entry(title);
+              entry.setInterval(startDateTime1, endDateTime1);
+              calendar.addEntry(entry);
+              calendar.addEntry(entry);
+
+
+
+
             } else {
                 System.out.println("A aula não existe!");
             }
@@ -149,4 +249,20 @@ public class CalendarAppLauncher extends Application {
         horario.getCalendars().addAll(calendar);
         cv.getCalendarSources().setAll(horario);
     }
+
+
+  public void showWebCalendar(MouseEvent mouseEvent) throws JsonProcessingException {
+    Webcal wCal = new Webcal(webCalLink);
+    jsonPATH =  "src/jsonFiles/webCalendar.json";
+  }
+
+
+  @FXML
+  public void handleButtonAction(javafx.event.ActionEvent actionEvent) {
+    webCalLink = webCal.getText();
+    System.out.println(webCalLink);
+  }
+
 }
+
+
