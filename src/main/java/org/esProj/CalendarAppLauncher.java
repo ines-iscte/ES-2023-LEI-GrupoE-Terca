@@ -28,11 +28,11 @@ import org.json.JSONObject;
 
 import java.awt.event.ActionEvent;
 import java.io.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.ZoneId;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.*;
 
 import static json.Webcal.getEventsFromWebcal;
@@ -94,7 +94,7 @@ public class CalendarAppLauncher extends Application {
         }
     }
 
-    public void showCalendar(MouseEvent mouseEvent) throws IOException {
+    public void showCalendar(MouseEvent mouseEvent) throws IOException, ParseException {
         CalendarView calendarView = new CalendarView();
         calendarView.setEnableTimeZoneSupport(true);
         data(jsonPATH, calendarView);
@@ -108,7 +108,7 @@ public class CalendarAppLauncher extends Application {
         stage.show();
     }
 
-    public void data(String jsonPATH, CalendarView cv) {
+    public void data(String jsonPATH, CalendarView cv) throws ParseException {
         ArrayList<String> courses = new ArrayList<>();
         String jsonFilePath = "arquivo.json";
         Calendar calendar = new Calendar("My Calendar");
@@ -186,8 +186,8 @@ public class CalendarAppLauncher extends Application {
               int monthStartNumber = monthMap.get(dateStartMonth);
 
 
-              String startDateTimeString = dateStartString[5] + "-" + monthStartNumber + "-" + dateStartString[2] + " " + dateStartString[0] +" " + dateStartString[3] +" "+ dateStartString[4];
-              String endDateTimeString = dateEndString[5] + "-" + monthStartNumber + "-" + dateEndString[2] + " " + dateEndString[0] +" " + dateEndString[3] +" "+ dateEndString[4];
+              //String startDateTimeString = dateStartString[5] + "-" + monthStartNumber + "-" + dateStartString[2] + " " + dateStartString[0] +" " + dateStartString[3] +" "+ dateStartString[4];
+              //String endDateTimeString = dateEndString[5] + "-" + monthStartNumber + "-" + dateEndString[2] + " " + dateEndString[0] +" " + dateEndString[3] +" "+ dateEndString[4];
 /*
               Date dateStart = Date.from(LocalDateTime.parse(startDateTimeString, DateTimeFormatter.ofPattern("www MM dd HH:mm:ss zzz yyyy")).atZone(ZoneId.systemDefault()).toInstant());
               Date dateEnd = Date.from(LocalDateTime.parse(endDateTimeString, DateTimeFormatter.ofPattern("www MM dd HH:mm:ss zzz yyyy")).atZone(ZoneId.systemDefault()).toInstant());
@@ -213,17 +213,18 @@ public class CalendarAppLauncher extends Application {
               System.out.println(dateTimeEnd);*/
 
 
+                DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+                TemporalAccessor temporalStart = inputFormatter.parse(allDateStart);
+                ZonedDateTime zonedDateTimeStart = ZonedDateTime.from(temporalStart).withZoneSameInstant(ZoneId.systemDefault());
+                LocalDateTime localDateTimeStart = zonedDateTimeStart.toLocalDateTime();
 
-
-
-
-
-
-
+                TemporalAccessor temporalEnd = inputFormatter.parse(allDateEnd);
+                ZonedDateTime zonedDateTimeEnd = ZonedDateTime.from(temporalEnd).withZoneSameInstant(ZoneId.systemDefault());
+                LocalDateTime localDateTimeEnd = zonedDateTimeEnd.toLocalDateTime();
 
 
               // Convert the start and end date/time strings into Java Date objects
-              Date dateStart = Date.from(LocalDateTime.parse(startDateTimeString, DateTimeFormatter.ofPattern("yyyy-MM-dd zzz HH:mm:ss EEEE")).atZone(ZoneId.systemDefault()).toInstant());
+              /*Date dateStart = Date.from(LocalDateTime.parse(startDateTimeString, DateTimeFormatter.ofPattern("yyyy-MM-dd zzz HH:mm:ss EEEE")).atZone(ZoneId.systemDefault()).toInstant());
               Date dateEnd = Date.from(LocalDateTime.parse(endDateTimeString, DateTimeFormatter.ofPattern("yyyy-MM-dd zzz HH:mm:ss EEEE")).atZone(ZoneId.systemDefault()).toInstant());
 
 
@@ -231,10 +232,10 @@ public class CalendarAppLauncher extends Application {
               LocalDate localDate1 = LocalDate.parse(event.get("start").asText(), formatter);
               LocalDate localDate2 = LocalDate.parse(event.get("end").asText(), formatter);
               LocalDateTime startDateTime1 = LocalDateTime.ofInstant(dateStart.toInstant(), ZoneId.systemDefault());
-              LocalDateTime endDateTime1 = LocalDateTime.ofInstant(dateStart.toInstant(), ZoneId.systemDefault());
+              LocalDateTime endDateTime1 = LocalDateTime.ofInstant(dateStart.toInstant(), ZoneId.systemDefault());*/
 
               Entry entry = new Entry(title);
-              entry.setInterval(startDateTime1, endDateTime1);
+              entry.setInterval(localDateTimeStart, localDateTimeEnd);
               calendar.addEntry(entry);
               calendar.addEntry(entry);
 
