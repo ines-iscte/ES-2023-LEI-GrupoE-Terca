@@ -6,9 +6,7 @@ import json.Webcal;
 public class TestWebcal {
 
      public static void main(String[] args) throws JsonProcessingException {
-        String webcalUrl = "webcal://fenix.iscte-iul.pt/publico/publicPersonICalendar.do?method=iCalendar&username=mcgoo1@iscte.pt&password=on3HvF7trmxu1QzKnTPIGAJjyXHIKLBppaADXkK94hhyDBxEOKtb3hDOuygwkjk5Ni4ha1sryy6EjW8CChWLiRLWuLwTvvG21l25jiqqCG0GP0OZC6WjUEEJjWR4jI2Z";
+        String webcalUrl = "webcal://fenix.iscte-iul.pt/publico/publicPersonICalendar.do?method=iCalendar&username=icaoo1@iscte.pt&password=nQRVoYelgfJ2boLhNThP2Uvwr58E9WRgrNTAefwxRddrxfb70n8Y04Ef1TmvUI7N4NUVM8ekoEBsq2ftZToBNzllB4FwDKV6nyyRJBXAs7j3b4hpkWoJR0SMaU0sjkya";
         Webcal teste = new Webcal(webcalUrl);
     }
-
-
 }
