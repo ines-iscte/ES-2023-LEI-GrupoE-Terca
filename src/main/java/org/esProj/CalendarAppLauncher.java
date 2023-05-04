@@ -228,6 +228,12 @@ public class CalendarAppLauncher extends Application {
     System.out.println(webCalLink);
   }
 
+    public void createSchedule(MouseEvent mouseEvent) throws IOException {
+        Stage stage = new Stage();
+        Scene scene = new Scene(loadFXML("criarHorario"), 640, 480);
+        stage.setScene(scene);
+        stage.show();
+    }
 }
 
 
