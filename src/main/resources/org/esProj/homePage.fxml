@@ -10,6 +10,6 @@
       <Button fx:id="visualize" layoutX="246.0" layoutY="200.0" mnemonicParsing="false" onMouseClicked="#showCalendar" text="Visualizar horário" />
       <TextField id="webCal" fx:id="webCal" layoutX="93.0" layoutY="292.0" onAction="#handleButtonAction" promptText="webCalendar" />
       <Button id="webcalButton" fx:id="webcalButton" layoutX="242.0" layoutY="292.0" mnemonicParsing="false" onMouseClicked="#showWebCalendar" text="Go" />
-      <Button layoutX="477.0" layoutY="200.0" mnemonicParsing="false" onMouseClicked="#createSchedule" text="Novo Estudante" />
+      <Button id="newStudent" layoutX="477.0" layoutY="200.0" mnemonicParsing="false" onMouseClicked="#createSchedule" text="Novo Estudante" />
    </children>
 </Pane>

@@ -257,6 +257,7 @@ public class CalendarAppLauncher extends Application {
     }
 
     public void chooseFileNew(MouseEvent mouseEvent) throws IOException {
+        checkBoxes.setVisible(true);
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("JSON", "*.json"),
@@ -278,15 +279,14 @@ public class CalendarAppLauncher extends Application {
         // Loop through each event in the array
         for (JsonNode event : events) {
             if (event != null) {
-                System.out.println(ucArray);
+                //System.out.println(ucArray);
                 if (!(ucArray.contains(event.get("Unidade Curricular").asText())) || ucArray.isEmpty()) {
                     ucArray.add((event.get("Unidade Curricular").asText()));
-                    System.out.println(ucArray);
+                    //System.out.println(ucArray);
                 }
             }
         }
         addCheckBoxes();
-        FlowPane.seeSchedule.setVisible(true);
         System.out.println(ucArray);
     }
 
