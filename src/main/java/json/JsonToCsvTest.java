@@ -1,21 +1,20 @@
 package json;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 
-import json.JsonToCsv;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 class JsonToCsvTest {
     private static JsonToCsv test=new JsonToCsv();
-    private File expectedFile = new File("C:\\Users\\maria\\Documents\\GitHub\\ES-2023-LEI-GrupoE-Terca\\TestCSV.csv");
-    private String path1 = "C:\\Users\\maria\\Documents\\GitHub\\ES-2023-LEI-GrupoE-Terca\\arquivo.json";
+    private File expectedFile = new File("C:\\Users\\inesc\\OneDrive - ISCTE-IUL\\Documentos\\Iscte\\3º Ano\\2º Semestre\\ES\\ES-2023-LEI-GrupoE-Terca\\TestCSV.csv");
+    private String path1 = "C:\\Users\\inesc\\OneDrive - ISCTE-IUL\\Documentos\\Iscte\\3º Ano\\2º Semestre\\ES\\ES-2023-LEI-GrupoE-Terca\\outputJSON.json";
     private String path2 = "https://raw.githubusercontent.com/ines-iscte/ES-2023-LEI-GrupoE-Terca/main/arquivo.json";
-    private String outputPaths = "C:\\Users\\maria\\Documents\\GitHub\\ES-2023-LEI-GrupoE-Terca";
+    private String outputPaths = "C:\\Users\\inesc\\OneDrive - ISCTE-IUL\\Documentos\\Iscte\\3º Ano\\2º Semestre\\ES";
 
     @Test
     void jsonToCsv1() {
@@ -28,7 +27,7 @@ class JsonToCsvTest {
 
     @Test
     void jsonToCsv2() throws IOException {
-        //Ficheiro Csv igual a ficheiro de controlo, com ficheiro local
+        //Ficheiro Csv igual a ficheiro de controlo, com ficheiro remoto
         String outputPath = outputPaths + "\\teste2.csv";
         test.jsonToCsv(path1, outputPath);
         File outputFile = new File(outputPath);
