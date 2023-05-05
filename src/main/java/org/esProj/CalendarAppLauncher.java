@@ -1,6 +1,5 @@
 package org.esProj;
 
-import biweekly.component.VEvent;
 import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
@@ -15,10 +14,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -26,18 +26,13 @@ import javafx.stage.Stage;
 import json.CsvToJson;
 import json.JsonToCsv;
 import json.Webcal;
-import org.json.JSONObject;
 
-import java.awt.event.ActionEvent;
 import java.io.*;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.*;
-
-import static json.Webcal.getEventsFromWebcal;
 
 public class CalendarAppLauncher extends Application {
 
@@ -46,10 +41,14 @@ public class CalendarAppLauncher extends Application {
     private File file;
     private String jsonPATH;
     private String webCalLink;
-    ArrayList<String> courses = new ArrayList<>();
-    private Scene sceneSchedule;
-    Stage stageSchedule;
+    ArrayList<String> ucArray = new ArrayList<>();
+    ArrayList<CheckBox> cbArray = new ArrayList<>();
 
+    @FXML
+    private FlowPane checkBoxes;
+
+    @FXML
+    private Button seeSchedule;
 
     @FXML
     private TextField webCal;
@@ -118,8 +117,7 @@ public class CalendarAppLauncher extends Application {
     public void data(String jsonPATH, CalendarView cv) throws ParseException {
       System.out.println(jsonPATH);
 
-      ArrayList<String> courses = new ArrayList<>();
-        String jsonFilePath = "arquivo.json";
+      ArrayList<String> ucArray = new ArrayList<>();
         Calendar calendar = new Calendar("My Calendar");
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode rootNode = null;
@@ -136,9 +134,6 @@ public class CalendarAppLauncher extends Application {
         for (JsonNode event : events) {
             //System.out.println(event);
             if (event != null) {
-              //  if(!(courses.contains(event.get("﻿Curso").asText())) || courses.isEmpty() ){
-              //  courses.add((event.get("﻿Curso").asText()));
-              //}
 
               if (jsonPATH.contains("src/jsonFiles")) {
                 title = event.get("summary").asText();
@@ -242,19 +237,15 @@ public class CalendarAppLauncher extends Application {
         stage.show();
     }
 
-    public void addCheckBoxes() {
-
-      VBox root = new VBox();
-
-      int n = 5; // Number of checkboxes to create
-
-      for (int i = 1; i <= n; i++) {
-        CheckBox checkBox = new CheckBox("Checkbox " + i);
-        root.getChildren().add(checkBox);
-      }
-
-      stageSchedule.setScene(sceneSchedule);
-      stageSchedule.show();
+    public void addCheckBoxes() throws IOException {
+        int n = ucArray.size(); // Number of checkboxes to create
+        for (int i = 0; i <= n-1; i++) {
+            CheckBox checkBox = new CheckBox(ucArray.get(i));
+            if(checkBoxes != null){
+                cbArray.add(checkBox);
+                checkBoxes.getChildren().add(checkBox);
+            }
+        }
 
     }
 
@@ -263,6 +254,44 @@ public class CalendarAppLauncher extends Application {
         Scene scene = new Scene(loadFXML("homePage"), 640, 480);
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void chooseFileNew(MouseEvent mouseEvent) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("JSON", "*.json"),
+                new FileChooser.ExtensionFilter("CSV", "*.csv"));
+        file = fileChooser.showOpenDialog(scene.getWindow());
+        jsonPATH = file.getAbsolutePath();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode = null;
+        String title;
+        try {
+            rootNode = objectMapper.readTree(new File(jsonPATH));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(rootNode);
+        ArrayNode events = (ArrayNode) rootNode.get("aulas");
+        // Loop through each event in the array
+        for (JsonNode event : events) {
+            if (event != null) {
+                System.out.println(ucArray);
+                if (!(ucArray.contains(event.get("Unidade Curricular").asText())) || ucArray.isEmpty()) {
+                    ucArray.add((event.get("Unidade Curricular").asText()));
+                    System.out.println(ucArray);
+                }
+            }
+        }
+        addCheckBoxes();
+        FlowPane.seeSchedule.setVisible(true);
+        System.out.println(ucArray);
+    }
+
+
+    public void seeSchedule(MouseEvent mouseEvent) {
     }
 }
 

@@ -47,8 +47,8 @@ public class CalendarApp extends Application {
         for (JsonNode event : events) {
             //System.out.println(event);
             if (event != null) {
-          /*     if(!(courses.contains(event.get("﻿Curso").asText())) || courses.isEmpty() ){
-                  courses.add((event.get("﻿Curso").asText()));
+          /*     if(!(ucArray.contains(event.get("﻿Curso").asText())) || ucArray.isEmpty() ){
+                  ucArray.add((event.get("﻿Curso").asText()));
                }
 */
                 String title = event.get("Unidade Curricular").asText();
@@ -83,7 +83,7 @@ public class CalendarApp extends Application {
         }
 
 
-        /*for (Object c : courses) {
+        /*for (Object c : ucArray) {
             Button b = new Button(c.toString());
             //stackPane.getChildren().add(b);
         }*/
