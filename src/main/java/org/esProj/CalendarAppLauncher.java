@@ -75,7 +75,7 @@ public class CalendarAppLauncher extends Application {
                 new FileChooser.ExtensionFilter("JSON", "*.json"),
                 new FileChooser.ExtensionFilter("CSV", "*.csv"));
         file = fileChooser.showOpenDialog(scene.getWindow());
-      jsonPATH = file.getAbsolutePath();
+        jsonPATH = file.getAbsolutePath();
     }
 
     public void convert(MouseEvent mouseEvent) {
@@ -109,10 +109,9 @@ public class CalendarAppLauncher extends Application {
     }
 
     public void data(String jsonPATH, CalendarView cv) throws ParseException {
-      System.out.println(jsonPATH);
+        System.out.println(jsonPATH);
 
-      ArrayList<String> courses = new ArrayList<>();
-        String jsonFilePath = "arquivo.json";
+        ArrayList<String> courses = new ArrayList<>();
         Calendar calendar = new Calendar("My Calendar");
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode rootNode = null;
@@ -123,88 +122,85 @@ public class CalendarAppLauncher extends Application {
             e.printStackTrace();
         }
 
-        //System.out.println(rootNode);
+        System.out.println(rootNode);
         ArrayNode events = (ArrayNode) rootNode.get("aulas");
         // Loop through each event in the array
         for (JsonNode event : events) {
             //System.out.println(event);
             if (event != null) {
-              //  if(!(courses.contains(event.get("﻿Curso").asText())) || courses.isEmpty() ){
-              //  courses.add((event.get("﻿Curso").asText()));
-              //}
+                //  if(!(courses.contains(event.get("﻿Curso").asText())) || courses.isEmpty() ){
+                //  courses.add((event.get("﻿Curso").asText()));
+                //}
+                if (jsonPATH.contains("src/jsonFiles")) {
+                    title = event.get("summary").asText();
+                    String allDateStart = event.get("start").asText();
+                    String[] dateStartString = allDateStart.split(" ");
+                    String dateStartMonth = dateStartString[1];
 
-              if (jsonPATH.contains("src/jsonFiles")) {
-                title = event.get("summary").asText();
-                String allDateStart = event.get("start").asText();
-                String[] dateStartString = allDateStart.split(" ");
-                String dateStartMonth = dateStartString[1];
+                    String allDateEnd = event.get("end").asText();
+                    String[] dateEndString = allDateStart.split(" ");
+                    String dateEndMonth = dateEndString[1];
 
-                String allDateEnd = event.get("end").asText();
-                String[] dateEndString = allDateStart.split(" ");
-                String dateEndMonth = dateEndString[1];
+                    Map<String, Integer> monthMap = new HashMap<>();
+                    monthMap.put("Jan", 1);
+                    monthMap.put("Feb", 2);
+                    monthMap.put("Mar", 3);
+                    monthMap.put("Apr", 4);
+                    monthMap.put("May", 5);
+                    monthMap.put("Jun", 6);
+                    monthMap.put("Jul", 7);
+                    monthMap.put("Aug", 8);
+                    monthMap.put("Sep", 9);
+                    monthMap.put("Oct", 10);
+                    monthMap.put("Nov", 11);
+                    monthMap.put("Dec", 12);
 
-                Map<String, Integer> monthMap = new HashMap<>();
-                monthMap.put("Jan", 1);
-                monthMap.put("Feb", 2);
-                monthMap.put("Mar", 3);
-                monthMap.put("Apr", 4);
-                monthMap.put("May", 5);
-                monthMap.put("Jun", 6);
-                monthMap.put("Jul", 7);
-                monthMap.put("Aug", 8);
-                monthMap.put("Sep", 9);
-                monthMap.put("Oct", 10);
-                monthMap.put("Nov", 11);
-                monthMap.put("Dec", 12);
+                    int monthStartNumber = monthMap.get(dateStartMonth);
 
-                int monthStartNumber = monthMap.get(dateStartMonth);
+                    DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+                    TemporalAccessor temporalStart = inputFormatter.parse(allDateStart);
+                    ZonedDateTime zonedDateTimeStart = ZonedDateTime.from(temporalStart).withZoneSameInstant(ZoneId.systemDefault());
+                    LocalDateTime localDateTimeStart = zonedDateTimeStart.toLocalDateTime();
 
-                DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
-                TemporalAccessor temporalStart = inputFormatter.parse(allDateStart);
-                ZonedDateTime zonedDateTimeStart = ZonedDateTime.from(temporalStart).withZoneSameInstant(ZoneId.systemDefault());
-                LocalDateTime localDateTimeStart = zonedDateTimeStart.toLocalDateTime();
+                    TemporalAccessor temporalEnd = inputFormatter.parse(allDateEnd);
+                    ZonedDateTime zonedDateTimeEnd = ZonedDateTime.from(temporalEnd).withZoneSameInstant(ZoneId.systemDefault());
+                    LocalDateTime localDateTimeEnd = zonedDateTimeEnd.toLocalDateTime();
 
-                TemporalAccessor temporalEnd = inputFormatter.parse(allDateEnd);
-                ZonedDateTime zonedDateTimeEnd = ZonedDateTime.from(temporalEnd).withZoneSameInstant(ZoneId.systemDefault());
-                LocalDateTime localDateTimeEnd = zonedDateTimeEnd.toLocalDateTime();
+                    Entry entry = new Entry(title);
+                    entry.setInterval(localDateTimeStart, localDateTimeEnd);
+                    calendar.addEntry(entry);
+                    calendar.addEntry(entry);
 
-                Entry entry = new Entry(title);
-                entry.setInterval(localDateTimeStart, localDateTimeEnd);
-                calendar.addEntry(entry);
-                calendar.addEntry(entry);
+                } else {
+                    title = event.get("Unidade Curricular").asText();
+                    String description = event.get("Turno").asText() + " - " + event.get("Turma").asText();
+                    //estava a dar erro pq algumas aulas n tinham sala atribuida
+                    if (event.get("Sala atribuida a aula") != null) {
+                        String location = event.get("Sala atribuida a aula").asText();
+                    }
+                    if (event.get("Data da aula") != null && event.get("Hora inicio da aula") != null && event.get("Hora fim da aula") != null) {
 
-              } else {
-                title = event.get("Unidade Curricular").asText();
-                //System.out.println(title);
-                String description = event.get("Turno").asText() + " - " + event.get("Turma").asText();
-                //estava a dar erro pq algumas aulas n tinham sala atribuida
-                if (event.get("Sala atribuida a aula") != null) {
-                  String location = event.get("Sala atribuida a aula").asText();
+                        String startDateTimeString = event.get("Data da aula").asText() + " " + event.get("Hora inicio da aula").asText();
+                        System.out.println(startDateTimeString);
+                        String endDateTimeString = event.get("Data da aula").asText() + " " + event.get("Hora fim da aula").asText();
+
+                        // Convert the start and end date/time strings into Java Date objects
+                        Date startDateTime = Date.from(LocalDateTime.parse(startDateTimeString, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")).atZone(ZoneId.systemDefault()).toInstant());
+                        Date endDateTime = Date.from(LocalDateTime.parse(endDateTimeString, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")).atZone(ZoneId.systemDefault()).toInstant());
+
+
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                        LocalDate localDate1 = LocalDate.parse(event.get("Data da aula").asText(), formatter);
+                        LocalDate localDate2 = LocalDate.parse(event.get("Data da aula").asText(), formatter);
+                        LocalDateTime startDateTime1 = LocalDateTime.ofInstant(startDateTime.toInstant(), ZoneId.systemDefault());
+                        LocalDateTime endDateTime1 = LocalDateTime.ofInstant(endDateTime.toInstant(), ZoneId.systemDefault());
+
+                        Entry entry = new Entry(title);
+                        entry.setInterval(startDateTime1, endDateTime1);
+                        calendar.addEntry(entry);
+                    }
+
                 }
-                if (event.get("Data da aula") != null && event.get("Hora início da aula") != null && event.get("Hora fim da aula") != null) {
-                  String startDateTimeString = event.get("Data da aula").asText() + " " + event.get("Hora início da aula").asText();
-
-                  String endDateTimeString = event.get("Data da aula").asText() + " " + event.get("Hora fim da aula").asText();
-
-                  // Convert the start and end date/time strings into Java Date objects
-                  Date startDateTime = Date.from(LocalDateTime.parse(startDateTimeString, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")).atZone(ZoneId.systemDefault()).toInstant());
-                  Date endDateTime = Date.from(LocalDateTime.parse(endDateTimeString, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")).atZone(ZoneId.systemDefault()).toInstant());
-
-
-                  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                  LocalDate localDate1 = LocalDate.parse(event.get("Data da aula").asText(), formatter);
-                  LocalDate localDate2 = LocalDate.parse(event.get("Data da aula").asText(), formatter);
-                  LocalDateTime startDateTime1 = LocalDateTime.ofInstant(startDateTime.toInstant(), ZoneId.systemDefault());
-                  LocalDateTime endDateTime1 = LocalDateTime.ofInstant(endDateTime.toInstant(), ZoneId.systemDefault());
-
-
-
-                  Entry entry = new Entry(title);
-                  entry.setInterval(startDateTime1, endDateTime1);
-                  calendar.addEntry(entry);
-                }
-
-              }
 
             } else {
                 System.out.println("A aula não existe!");
@@ -216,17 +212,17 @@ public class CalendarAppLauncher extends Application {
     }
 
 
-  public void showWebCalendar(MouseEvent mouseEvent) throws JsonProcessingException {
-    Webcal wCal = new Webcal(webCalLink);
-    jsonPATH =  "src/jsonFiles/webCalendar.json";
-  }
+    public void showWebCalendar(MouseEvent mouseEvent) throws JsonProcessingException {
+        Webcal wCal = new Webcal(webCalLink);
+        jsonPATH = "src/jsonFiles/webCalendar.json";
+    }
 
 
-  @FXML
-  public void handleButtonAction(javafx.event.ActionEvent actionEvent) {
-    webCalLink = webCal.getText();
-    System.out.println(webCalLink);
-  }
+    @FXML
+    public void handleButtonAction(javafx.event.ActionEvent actionEvent) {
+        webCalLink = webCal.getText();
+        System.out.println(webCalLink);
+    }
 
     public void createSchedule(MouseEvent mouseEvent) throws IOException {
         Stage stage = new Stage();
