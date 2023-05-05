@@ -41,6 +41,7 @@ import static json.Webcal.getEventsFromWebcal;
 
 public class CalendarAppLauncher extends Application {
 
+    static Stage startStage;
     private static Scene scene;
     private File file;
     private String jsonPATH;
@@ -57,9 +58,9 @@ public class CalendarAppLauncher extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         scene = new Scene(loadFXML("homePage"), 640, 480);
+        startStage = stage;
         stage.setScene(scene);
         stage.show();
-
     }
 
     static void setRoot(String fxml) throws IOException {
@@ -235,8 +236,8 @@ public class CalendarAppLauncher extends Application {
   }
 
     public void createSchedule(MouseEvent mouseEvent) throws IOException {
-        Stage stage = new Stage();
-        Scene scene = new Scene(loadFXML("criarHorario"), 640, 480);
+        Stage stage = (Stage) startStage.getScene().getWindow();
+        Scene scene = new Scene(loadFXML("createSchedule"), 640, 480);
         stage.setScene(scene);
         stage.show();
     }
