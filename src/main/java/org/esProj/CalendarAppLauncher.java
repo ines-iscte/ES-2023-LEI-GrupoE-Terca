@@ -257,6 +257,13 @@ public class CalendarAppLauncher extends Application {
       stageSchedule.show();
 
     }
+
+    public void goBack(MouseEvent mouseEvent) throws IOException {
+        Stage stage = (Stage) startStage.getScene().getWindow();
+        Scene scene = new Scene(loadFXML("homePage"), 640, 480);
+        stage.setScene(scene);
+        stage.show();
+    }
 }
 
 
