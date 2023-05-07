@@ -125,6 +125,13 @@ public class CalendarAppLauncher extends Application {
     public void showCalendar(MouseEvent mouseEvent) throws IOException, ParseException {
         CalendarView calendarView = new CalendarView();
         calendarView.setEnableTimeZoneSupport(true);
+        if(jsonPATH.contains(".csv")) {
+            String filePath = file.getAbsolutePath();
+            String outputPath = new File(filePath).getParent();
+            CsvToJson tojson = new CsvToJson();
+            tojson.csvToJson(filePath, outputPath + "/FicheiroConvertido.json");
+            jsonPATH = outputPath + "/FicheiroConvertido.json";
+        }
         data(jsonPATH, calendarView);
 
     }
@@ -166,6 +173,7 @@ public class CalendarAppLauncher extends Application {
         } catch (IOException e) {
             logger.log(Level.INFO, "Começar a tratar dos dados para o calendário");
         }
+
         if(!jsonPATH.contains("src/jsonFiles")){
         datesJSON(jsonPATH);}
         //System.out.println(rootNode);
@@ -174,6 +182,7 @@ public class CalendarAppLauncher extends Application {
         for (JsonNode event : events) {
             //System.out.println(event);
             if (event != null) {
+                
 
                 if (jsonPATH.contains("src/jsonFiles")) {
                     title = event.get("Unidade Curricular").asText();
@@ -334,12 +343,10 @@ public class CalendarAppLauncher extends Application {
         unseeList.setOnAction(e -> hideList(stage));
     }
 
-
     public void showWebCalendar(MouseEvent mouseEvent) throws JsonProcessingException {
         Webcal wCal = new Webcal(webCalLink);
         jsonPATH =  "src/jsonFiles/webCalendar.json";
     }
-
 
     @FXML
     public void handleButtonAction(javafx.event.ActionEvent actionEvent) {
@@ -415,7 +422,6 @@ public class CalendarAppLauncher extends Application {
             }
         }
     }
-
 
     public void seeSchedule(MouseEvent mouseEvent) {
         CalendarView calendarView = new CalendarView();
@@ -521,7 +527,6 @@ public class CalendarAppLauncher extends Application {
         return newSchedule.put("aulas", newJsonArray);
     }
 
-
     public void convertNewJson() throws IOException {
         JSONObject newSchedule = jsonFromSchedule();
         // Escrever o novo JSONArray num ficheiro JSON
@@ -584,6 +589,3 @@ public class CalendarAppLauncher extends Application {
     }
 
 }
-
-
-
