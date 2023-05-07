@@ -130,6 +130,7 @@ public class CalendarAppLauncher extends Application {
     }
 
     public void datesJSON(String jsonPATH){
+
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode rootNode = null;
         String title;
@@ -165,7 +166,8 @@ public class CalendarAppLauncher extends Application {
         } catch (IOException e) {
             logger.log(Level.INFO, "Começar a tratar dos dados para o calendário");
         }
-        datesJSON(jsonPATH);
+        if(!jsonPATH.contains("src/jsonFiles")){
+        datesJSON(jsonPATH);}
         //System.out.println(rootNode);
         ArrayNode events = (ArrayNode) rootNode.get("aulas");
         // Loop through each event in the array

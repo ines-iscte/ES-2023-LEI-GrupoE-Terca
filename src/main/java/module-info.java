@@ -17,7 +17,7 @@ module org.ESproj {
     requires com.fasterxml.jackson.databind;
     requires org.apache.commons.csv;
 
-    opens  json to org.apache.commons.csv;
+    opens json to org.apache.commons.csv;
 
     requires com.calendarfx.view;
     requires fr.brouillard.oss.cssfx;
