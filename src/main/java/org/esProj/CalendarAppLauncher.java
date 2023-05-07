@@ -531,7 +531,18 @@ public class CalendarAppLauncher extends Application {
         String newScheduleString = newSchedule.toString(); // Convertendo o objeto JSON em uma string JSON
         try {
             // Criação do arquivo temporário
-            File tempFile = File.createTempFile("temp", ".json");
+            File tempDir = new File(System.getProperty("java.io.tmpdir") + File.separator + "secure_temp_dir");
+            if (!tempDir.exists()) {
+                tempDir.mkdirs();
+            }
+            tempDir.setExecutable(false);
+            tempDir.setWritable(false);
+            tempDir.setReadable(false);
+            File tempFile = File.createTempFile("temp", ".json", tempDir);
+            tempFile.setExecutable(false);
+            tempFile.setWritable(false);
+            tempFile.setReadable(false);
+            //File tempFile = File.createTempFile("temp", ".json");
 
             // Salvando a string JSON no arquivo temporário
             FileWriter writer = new FileWriter(tempFile);
