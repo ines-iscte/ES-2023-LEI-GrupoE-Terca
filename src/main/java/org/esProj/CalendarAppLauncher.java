@@ -30,6 +30,7 @@ import json.Webcal;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.swing.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -374,7 +375,8 @@ public class CalendarAppLauncher extends Application {
         stage.show();
     }
 
-    public void convertNewJson() throws IOException {
+    //func aux para converter e criar json e CSV ponto 4
+    public JSONObject jsonFromSchedule(){
         checkSelected();
         String content = null;
         try {
@@ -396,11 +398,18 @@ public class CalendarAppLauncher extends Application {
 
             }
         }
+        //converter este jsonArray com as UCs selecionadas num JSON
+        JSONObject newSchedule = new JSONObject();
+        return newSchedule.put("aulas", newJsonArray);
+    }
 
+
+    public void convertNewJson() throws IOException {
+        JSONObject newSchedule = jsonFromSchedule();
         // Escrever o novo JSONArray num ficheiro JSON
         try {
             fileNewSchedule = new FileWriter("novoHorario.json");
-            fileNewSchedule.write(newJsonArray.toString());
+            fileNewSchedule.write(newSchedule.toString());
             fileNewSchedule.flush();
             fileNewSchedule.close();
         } catch (IOException e) {
@@ -409,8 +418,47 @@ public class CalendarAppLauncher extends Application {
     }
 
     public void convertNewCSV(MouseEvent mouseEvent) throws IOException {
+        JSONObject newSchedule = jsonFromSchedule();
+        String newScheduleString = newSchedule.toString(); // Convertendo o objeto JSON em uma string JSON
+        try {
+            // Criação do arquivo temporário
+            File tempFile = File.createTempFile("temp", ".json");
 
+            // Salvando a string JSON no arquivo temporário
+            FileWriter writer = new FileWriter(tempFile);
+            writer.write(newScheduleString);
+            writer.close();
+
+            String directoryPath = saveItHere();
+            String fileName = "novoHorario.csv"; // Nome do arquivo CSV
+            String filePath = directoryPath + File.separator + fileName;
+            // para CSV
+            JsonToCsv toCSV = new JsonToCsv();
+            toCSV.jsonToCsv(tempFile.getAbsoluteFile().getPath(), filePath);
+            // Excluindo o arquivo temporário
+            tempFile.delete();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
+    public String saveItHere() {
+        String directoryPath = null;
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+        // Exibe o diálogo de escolha de diretório
+        int result = fileChooser.showSaveDialog(null);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            // Obtém o caminho do diretório escolhido pelo usuário
+            directoryPath = fileChooser.getSelectedFile().getAbsolutePath();
+
+            System.out.println("Diretório escolhido: " + directoryPath);
+        }
+        return directoryPath;
+    }
+
 }
 
 
