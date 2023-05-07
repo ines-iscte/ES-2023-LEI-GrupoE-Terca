@@ -10,18 +10,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Orientation;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import json.CsvToJson;
@@ -54,12 +53,24 @@ public class CalendarAppLauncher extends Application {
     ArrayList<CheckBox> cbArray = new ArrayList<>();
     ArrayList<String> cbSelected = new ArrayList<>();
     FileWriter fileNewSchedule;
+    private ListView<String> overlaps = new ListView<>();;
+    private ListView<String> overcrowdeds = new ListView<>();
+    ArrayList<String> horariosAulas = new ArrayList<>();
 
     @FXML
     private FlowPane checkBoxes;
 
     @FXML
     private Button seeSchedule;
+
+    @FXML
+    private Button unseeList = new Button("Back");
+
+    @FXML
+    private Button overlap = new Button("Sobreposições");
+
+    @FXML
+    private Button overcrowded = new Button("Aulas sobrelotadas");
 
     @FXML
     private TextField webCal;
@@ -115,14 +126,30 @@ public class CalendarAppLauncher extends Application {
         CalendarView calendarView = new CalendarView();
         calendarView.setEnableTimeZoneSupport(true);
         data(jsonPATH, calendarView);
-        Scene scene = new Scene(new StackPane(calendarView));
-        Stage stage = new Stage();
-        stage.setTitle("Calendar");
-        stage.setScene(scene);
-        stage.setWidth(700);
-        stage.setHeight(600);
-        stage.centerOnScreen();
-        stage.show();
+
+    }
+
+    public void datesJSON(String jsonPATH){
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode = null;
+        String title;
+        try {
+            rootNode = objectMapper.readTree(new File(jsonPATH));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //System.out.println(rootNode);
+        ArrayNode events = (ArrayNode) rootNode.get("aulas");
+        // Loop through each event in the array
+        for (JsonNode event : events) {
+            //System.out.println(event);
+            if (event != null) {
+                title = event.get("Unidade Curricular").asText();
+                String startDateTimeString = event.get("Data da aula").asText() + " " + event.get("Hora inicio da aula").asText();
+                horariosAulas.add(title + ": " + startDateTimeString);
+            }
+        }
     }
 
     public void data(String jsonPATH, CalendarView cv) throws ParseException {
@@ -136,9 +163,9 @@ public class CalendarAppLauncher extends Application {
         try {
             rootNode = objectMapper.readTree(new File(jsonPATH));
         } catch (IOException e) {
-            logger.log(Level.INFO, "");
+            logger.log(Level.INFO, "Começar a tratar dos dados para o calendário");
         }
-
+        datesJSON(jsonPATH);
         //System.out.println(rootNode);
         ArrayNode events = (ArrayNode) rootNode.get("aulas");
         // Loop through each event in the array
@@ -194,10 +221,27 @@ public class CalendarAppLauncher extends Application {
                     if (event.get("Sala atribuida a aula") != null) {
                         String location = event.get("Sala atribuida a aula").asText();
                     }
+
                     if (event.get("Data da aula") != null && event.get("Hora inicio da aula") != null && event.get("Hora fim da aula") != null) {
                         String startDateTimeString = event.get("Data da aula").asText() + " " + event.get("Hora inicio da aula").asText();
 
                         String endDateTimeString = event.get("Data da aula").asText() + " " + event.get("Hora fim da aula").asText();
+
+                        if(event.get("Inscritos no turno")!=null && event.get("Lotacao da sala")!=null) {
+                            String inscritos = event.get("Inscritos no turno").asText();
+                            String lotacao = event.get("Lotacao da sala").asText();
+                            if (Integer.parseInt(inscritos) > Integer.parseInt(lotacao)) {
+                                String info = title + ": inscritos- " + inscritos + "; lotação- " + lotacao + " // data: " + startDateTimeString;
+                                overcrowdeds.getItems().add(info);
+                                System.out.println(title + " sobrelotada");
+                            }
+                        }
+
+                        for (String horarioA: horariosAulas) {
+                            if(horarioA.contains(startDateTimeString) && !(horarioA.contains(title))){
+                                overlaps.getItems().add(horarioA + " X " + title + ": " + startDateTimeString);
+                            }
+                        }
 
                         // Convert the start and end date/time strings into Java Date objects
                         Date startDateTime = Date.from(LocalDateTime.parse(startDateTimeString, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")).atZone(ZoneId.systemDefault()).toInstant());
@@ -209,8 +253,6 @@ public class CalendarAppLauncher extends Application {
                         LocalDate localDate2 = LocalDate.parse(event.get("Data da aula").asText(), formatter);
                         LocalDateTime startDateTime1 = LocalDateTime.ofInstant(startDateTime.toInstant(), ZoneId.systemDefault());
                         LocalDateTime endDateTime1 = LocalDateTime.ofInstant(endDateTime.toInstant(), ZoneId.systemDefault());
-
-
 
                         Entry entry = new Entry(title);
                         entry.setInterval(startDateTime1, endDateTime1);
@@ -226,6 +268,61 @@ public class CalendarAppLauncher extends Application {
         CalendarSource horario = new CalendarSource("Horário");
         horario.getCalendars().addAll(calendar);
         cv.getCalendarSources().setAll(horario);
+        setCalendarView(cv);
+    }
+
+    //define botões e vista do calendário
+    public void setCalendarView(CalendarView cv){
+        // Criação da barra de botões
+        ButtonBar buttonBar = new ButtonBar();
+        buttonBar.getButtons().addAll(overlap, overcrowded); // Adiciona os botões à barra
+
+        // Criação do VBox para agrupar os componentes
+        VBox contentBox = new VBox(cv, buttonBar);
+
+        // Criação do painel principal
+        BorderPane root = new BorderPane();
+        root.setCenter(contentBox); // Define o VBox como o conteúdo central
+
+        Scene scene = new Scene(new StackPane(root));
+        Stage stage = new Stage();
+        stage.setTitle("Calendar");
+        stage.setScene(scene);
+        stage.setWidth(700);
+        stage.setHeight(600);
+        stage.centerOnScreen();
+        stage.show();
+
+        overlap.setOnAction(e -> seeOverlaps(stage));
+        overcrowded.setOnAction(e -> seeOvercrowded(stage));
+
+    }
+
+    private void seeOvercrowded(Stage stage) {
+        // Criação do HBox para agrupar a lista e o botão
+        VBox bottomContent = new VBox(overcrowdeds, unseeList);
+
+        // Define o conteúdo do BorderPane como o HBox
+        BorderPane root = (BorderPane) ((StackPane) stage.getScene().getRoot()).getChildren().get(0);
+        root.setBottom(bottomContent);
+
+        unseeList.setOnAction(e -> hideList(stage));
+    }
+
+    private void hideList(Stage stage) {
+        BorderPane root = (BorderPane) ((StackPane) stage.getScene().getRoot()).getChildren().get(0);
+        root.setBottom(null); // Remove a lista do bottom do BorderPane
+    }
+
+    private void seeOverlaps(Stage stage) {
+        // Criação do HBox para agrupar a lista e o botão
+        VBox bottomContent = new VBox(overlaps, unseeList);
+
+        // Define o conteúdo do BorderPane como o HBox
+        BorderPane root = (BorderPane) ((StackPane) stage.getScene().getRoot()).getChildren().get(0);
+        root.setBottom(bottomContent);
+
+        unseeList.setOnAction(e -> hideList(stage));
     }
 
 
@@ -282,7 +379,7 @@ public class CalendarAppLauncher extends Application {
         try {
             rootNode = objectMapper.readTree(new File(jsonPATH));
         } catch (IOException e) {
-            logger.log(Level.INFO, "");
+            logger.log(Level.INFO, "Começar a tratar dos dados para o calendário");
         }
 
         System.out.println(rootNode);
@@ -323,9 +420,9 @@ public class CalendarAppLauncher extends Application {
         try {
             rootNode = objectMapper.readTree(new File(jsonPATH));
         } catch (IOException e) {
-            logger.log(Level.INFO, "");
+            logger.log(Level.INFO, "Ucs escolhidas para horário");
         }
-
+        datesJSON(jsonPATH);
         //System.out.println(rootNode);
         ArrayNode events = (ArrayNode) rootNode.get("aulas");
         // Loop through each event in the array
@@ -340,10 +437,27 @@ public class CalendarAppLauncher extends Application {
                     if (event.get("Sala atribuida a aula") != null) {
                         String location = event.get("Sala atribuida a aula").asText();
                     }
+
                     if (event.get("Data da aula") != null && event.get("Hora inicio da aula") != null && event.get("Hora fim da aula") != null) {
                         String startDateTimeString = event.get("Data da aula").asText() + " " + event.get("Hora inicio da aula").asText();
 
                         String endDateTimeString = event.get("Data da aula").asText() + " " + event.get("Hora fim da aula").asText();
+
+                        if(event.get("Inscritos no turno")!=null && event.get("Lotacao da sala")!=null) {
+                            String inscritos = event.get("Inscritos no turno").asText();
+                            String lotacao = event.get("Lotacao da sala").asText();
+                            if (Integer.parseInt(inscritos) > Integer.parseInt(lotacao)) {
+                                String info = title + ": inscritos- " + inscritos + "; lotação- " + lotacao + " // data: " + startDateTimeString;
+                                overcrowdeds.getItems().add(info);
+                                System.out.println(title + " sobrelotada");
+                            }
+                        }
+
+                        for (String horarioA: horariosAulas) {
+                            if(horarioA.contains(startDateTimeString) && !(horarioA.contains(title))){
+                                overlaps.getItems().add(horarioA + " X " + title + ": " + startDateTimeString);
+                            }
+                        }
 
                         // Convert the start and end date/time strings into Java Date objects
                         Date startDateTime = Date.from(LocalDateTime.parse(startDateTimeString, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")).atZone(ZoneId.systemDefault()).toInstant());
@@ -367,14 +481,7 @@ public class CalendarAppLauncher extends Application {
         CalendarSource horario = new CalendarSource("Horário");
         horario.getCalendars().addAll(calendar);
         calendarView.getCalendarSources().setAll(horario);
-        Scene scene = new Scene(new StackPane(calendarView));
-        Stage stage = new Stage();
-        stage.setTitle("Calendar");
-        stage.setScene(scene);
-        stage.setWidth(700);
-        stage.setHeight(600);
-        stage.centerOnScreen();
-        stage.show();
+        setCalendarView(calendarView);
     }
 
     //func aux para converter e criar json e CSV ponto 4
@@ -384,7 +491,7 @@ public class CalendarAppLauncher extends Application {
         try {
             content = new String(Files.readAllBytes(Path.of(jsonPATH)));
         } catch (IOException e) {
-            logger.log(Level.INFO, "");
+            logger.log(Level.INFO, "Guardar horario num ficheiro");
         }
         // Criar um JSONArray a partir do JSON
         JSONObject jsonObject = new JSONObject(content);
@@ -415,7 +522,7 @@ public class CalendarAppLauncher extends Application {
             fileNewSchedule.flush();
             fileNewSchedule.close();
         } catch (IOException e) {
-            logger.log(Level.INFO, "");
+            logger.log(Level.INFO, "Horário guardado em JSON");
         }
     }
 
