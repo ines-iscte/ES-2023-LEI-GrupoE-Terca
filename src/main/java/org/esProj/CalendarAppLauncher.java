@@ -40,9 +40,11 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CalendarAppLauncher extends Application {
-
+    private static final Logger logger = Logger.getLogger(CalendarAppLauncher.class.getName());
     static Stage startStage;
     private static Scene scene;
     private File file;
@@ -98,7 +100,7 @@ public class CalendarAppLauncher extends Application {
         JsonToCsv toCSV = new JsonToCsv();
         String filePath = file.getAbsolutePath();
         String outputPath = new File(filePath).getParent();
-        System.out.println(outputPath);
+        logger.log(Level.INFO, "Escolhido ficheiro a converter");
         if (filePath.contains(".csv")) {
             toJson.csvToJson(filePath, outputPath + "/FicheiroConvertido.json");
             jsonPATH = outputPath + "/FicheiroConvertido.json";
@@ -134,7 +136,7 @@ public class CalendarAppLauncher extends Application {
         try {
             rootNode = objectMapper.readTree(new File(jsonPATH));
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.INFO, "");
         }
 
         //System.out.println(rootNode);
@@ -280,7 +282,7 @@ public class CalendarAppLauncher extends Application {
         try {
             rootNode = objectMapper.readTree(new File(jsonPATH));
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.INFO, "");
         }
 
         System.out.println(rootNode);
@@ -321,7 +323,7 @@ public class CalendarAppLauncher extends Application {
         try {
             rootNode = objectMapper.readTree(new File(jsonPATH));
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.INFO, "");
         }
 
         //System.out.println(rootNode);
@@ -382,7 +384,7 @@ public class CalendarAppLauncher extends Application {
         try {
             content = new String(Files.readAllBytes(Path.of(jsonPATH)));
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.INFO, "");
         }
         // Criar um JSONArray a partir do JSON
         JSONObject jsonObject = new JSONObject(content);
@@ -413,7 +415,7 @@ public class CalendarAppLauncher extends Application {
             fileNewSchedule.flush();
             fileNewSchedule.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.INFO, "");
         }
     }
 
@@ -437,8 +439,10 @@ public class CalendarAppLauncher extends Application {
             toCSV.jsonToCsv(tempFile.getAbsoluteFile().getPath(), filePath);
             // Excluindo o arquivo temporário
             tempFile.delete();
+            if (!tempFile.delete())
+                logger.log(Level.INFO, "Impossível eliminar ficheiro temporário");
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.INFO, "");
         }
     }
 

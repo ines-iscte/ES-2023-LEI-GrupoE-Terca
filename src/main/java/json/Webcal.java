@@ -37,7 +37,7 @@ public class Webcal {
             System.setOut(new PrintStream(System.out, true, "UTF-8"));
             //para aceitar os acentos
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            logger.log(Level.INFO, "Erro ao ler o ficheiro.");
         }
 
         if (webcalURL.startsWith("webcal")) {
@@ -65,9 +65,9 @@ public class Webcal {
       try (FileWriter file = new FileWriter(filePath)) {
         file.write(eventsJson.toString());
         file.flush();
-        System.out.println("Successfully saved JSONObject to file!");
+        System.out.println("Ficheiro JsonObject guardado corretamente!");
       } catch (IOException e) {
-        e.printStackTrace();
+          logger.log(Level.INFO, "Ficheiro JsonObject não foi guardado corretamente.");
       }       // } else {
             //System.out.println("No events found in webcal URL");
        // }
@@ -86,7 +86,7 @@ public class Webcal {
             return (ical != null) ? ical.getEvents() : null;
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.INFO, "Erro ao ler eventos.");
             return null;
         }
 
