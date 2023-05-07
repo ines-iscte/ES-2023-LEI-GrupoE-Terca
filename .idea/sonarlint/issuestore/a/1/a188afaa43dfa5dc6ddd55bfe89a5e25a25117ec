@@ -1,0 +1,58 @@
+
+E
+java:S3740"/Provide the parametrized type for this generic.(äŸÿô
+E
+java:S3740"/Provide the parametrized type for this generic.(äŸÿô
+J
+java:S3740K"/Provide the parametrized type for this generic.(É”Ô¶ÿÿÿÿÿ
+J
+java:S3740K"/Provide the parametrized type for this generic.(É”Ô¶ÿÿÿÿÿ
+h
+java:S1192<"MDefine a constant instead of duplicating this literal "Data da aula" 4 times.(ó§Ã¿şÿÿÿÿ
+J
+java:S1066k"/Merge this if statement with the enclosing one.(½¬‰Áıÿÿÿÿ
+‹
+java:S1319r"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(«Ü›Ãıÿÿÿÿ
+t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(¼ñ›àûÿÿÿÿ
+t
+java:S1171 "YMove the contents of this initializer to a standard constructor or to field initializers.(ÒÌâ–øÿÿÿÿ
+V	java:S125("<This block of commented-out lines of code should be removed.(Šò‚ÿÿÿÿÿ
+U
+java:S18548"?Remove this useless assignment to local variable "description".(É£æœ
+W
+java:S1854;"<Remove this useless assignment to local variable "location".(×½ÅÀùÿÿÿÿ
+Y
+java:S1854F">Remove this useless assignment to local variable "localDate2".(”È±Ãüÿÿÿÿ
+T
+java:S1854E">Remove this useless assignment to local variable "localDate1".(Âë»
+V	java:S1250"<This block of commented-out lines of code should be removed.(ç•¨•üÿÿÿÿ
+P	java:S1252"<This block of commented-out lines of code should be removed.(¨†Ö
+P	java:S1257"<This block of commented-out lines of code should be removed.(ã¹—]
+F
+java:S14818"0Remove this unused "description" local variable.(É£æœ
+H
+java:S1481;"-Remove this unused "location" local variable.(×½ÅÀùÿÿÿÿ
+E
+java:S1481E"/Remove this unused "localDate1" local variable.(Âë»
+J
+java:S1481F"/Remove this unused "localDate2" local variable.(”È±Ãüÿÿÿÿ
+N	java:S106N"9Replace this use of System.out or System.err by a logger.(¥²˜Å
+N	java:S106Q"9Replace this use of System.out or System.err by a logger.(±Ó÷
+V	java:S125V"<This block of commented-out lines of code should be removed.(éÑ¥ôùÿÿÿÿ
+N	java:S106b"9Replace this use of System.out or System.err by a logger.(Áß‡Ü
+V	java:S125i"<This block of commented-out lines of code should be removed.(ç•¨•üÿÿÿÿ
+U
+java:S2479k":Remove the non-escaped \uFEFF character from this literal.(½¬‰Áıÿÿÿÿ
+P
+java:S2479l":Remove the non-escaped \uFEFF character from this literal.(ˆ»Ô
+Q	java:S125y"<This block of commented-out lines of code should be removed.(ˆ„ÓÈ
+N
+java:S1128"3Remove this unused import 'javafx.fxml.FXMLLoader'.(À‡ô³úÿÿÿÿ
+F
+java:S1128"0Remove this unused import 'javafx.scene.Parent'.(²ä¡È
+E
+java:S1128"/Remove this unused import 'javafx.scene.Scene'.(Õü²
+P
+java:S1128	":Remove this unused import 'javafx.scene.layout.StackPane'.(™÷èò
+G
+java:S1144`"1Remove this unused private "printCourses" method.(ö€²
