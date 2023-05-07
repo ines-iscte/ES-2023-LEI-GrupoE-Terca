@@ -535,14 +535,7 @@ public class CalendarAppLauncher extends Application {
             if (!tempDir.exists()) {
                 tempDir.mkdirs();
             }
-            tempDir.setExecutable(false);
-            tempDir.setWritable(false);
-            tempDir.setReadable(false);
             File tempFile = File.createTempFile("temp", ".json", tempDir);
-            tempFile.setExecutable(false);
-            tempFile.setWritable(false);
-            tempFile.setReadable(false);
-            //File tempFile = File.createTempFile("temp", ".json");
 
             // Salvando a string JSON no arquivo temporário
             FileWriter writer = new FileWriter(tempFile);
