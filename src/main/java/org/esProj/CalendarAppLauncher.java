@@ -176,12 +176,12 @@ public class CalendarAppLauncher extends Application {
             if (event != null) {
 
                 if (jsonPATH.contains("src/jsonFiles")) {
-                    title = event.get("summary").asText();
-                    String allDateStart = event.get("start").asText();
+                    title = event.get("Unidade Curricular").asText();
+                    String allDateStart = event.get("Data da aula").asText();
                     String[] dateStartString = allDateStart.split(" ");
                     String dateStartMonth = dateStartString[1];
 
-                    String allDateEnd = event.get("end").asText();
+                    String allDateEnd = event.get("Data fim da aula").asText();
                     String[] dateEndString = allDateStart.split(" ");
                     String dateEndMonth = dateEndString[1];
 
@@ -209,6 +209,13 @@ public class CalendarAppLauncher extends Application {
                     TemporalAccessor temporalEnd = inputFormatter.parse(allDateEnd);
                     ZonedDateTime zonedDateTimeEnd = ZonedDateTime.from(temporalEnd).withZoneSameInstant(ZoneId.systemDefault());
                     LocalDateTime localDateTimeEnd = zonedDateTimeEnd.toLocalDateTime();
+
+                    horariosAulas.add(title + ": " + allDateStart);
+                    for (String horarioA: horariosAulas) {
+                        if(horarioA.contains(allDateStart) && !(horarioA.contains(title))){
+                            overlaps.getItems().add(horarioA + " X " + title + ": " + allDateStart);
+                        }
+                    }
 
                     Entry entry = new Entry(title);
                     entry.setInterval(localDateTimeStart, localDateTimeEnd);

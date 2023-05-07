@@ -51,9 +51,9 @@ public class Webcal {
         if (events != null) {
             for (VEvent event : events) {
                 JSONObject eventJson = new JSONObject();
-                eventJson.put("summary", event.getSummary().getValue());
-                eventJson.put("start", event.getDateStart().getValue());
-                eventJson.put("end", event.getDateEnd().getValue());
+                eventJson.put("Unidade Curricular", event.getSummary().getValue());
+                eventJson.put("Data da aula", event.getDateStart().getValue());
+                eventJson.put("Data fim da aula", event.getDateEnd().getValue());
                 eventsJson.append("aulas", eventJson);
             }
 
