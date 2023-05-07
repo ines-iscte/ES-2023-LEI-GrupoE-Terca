@@ -136,7 +136,7 @@ public class CalendarAppLauncher extends Application {
         try {
             rootNode = objectMapper.readTree(new File(jsonPATH));
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.INFO, "Erro na leitura dos dados.");
         }
 
         //System.out.println(rootNode);
