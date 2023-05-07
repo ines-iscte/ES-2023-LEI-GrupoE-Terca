@@ -137,7 +137,7 @@ public class CalendarAppLauncher extends Application {
         try {
             rootNode = objectMapper.readTree(new File(jsonPATH));
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.INFO, "Erro na leitura dos dados.");
         }
 
         //System.out.println(rootNode);
@@ -533,7 +533,11 @@ public class CalendarAppLauncher extends Application {
         String newScheduleString = newSchedule.toString(); // Convertendo o objeto JSON em uma string JSON
         try {
             // Criação do arquivo temporário
-            File tempFile = File.createTempFile("temp", ".json");
+            File tempDir = new File(System.getProperty("java.io.tmpdir") + File.separator + "secure_temp_dir");
+            if (!tempDir.exists()) {
+                tempDir.mkdirs();
+            }
+            File tempFile = File.createTempFile("temp", ".json", tempDir);
 
             // Salvando a string JSON no arquivo temporário
             FileWriter writer = new FileWriter(tempFile);
