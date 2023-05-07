@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.calendarfx.model.Calendar;
+import json.Webcal;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,9 +22,11 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CalendarApp extends Application {
-
+    private static final Logger logger = Logger.getLogger(CalendarApp.class.getName());
     ArrayList<String> courses = new ArrayList<>();
     String jsonFilePath = "arquivo.json";
     Calendar calendar = new Calendar("My Calendar");
@@ -33,7 +36,7 @@ public class CalendarApp extends Application {
         try {
             rootNode = objectMapper.readTree(new File(jsonFilePath));
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.INFO, "");
         }
     }
 
@@ -76,9 +79,8 @@ public class CalendarApp extends Application {
                 entry.setInterval(startDateTime1, endDateTime1);
                 calendar.addEntry(entry);
                 System.out.println(entry);
-
             }else{
-                System.out.println("A aula não existe!");
+                logger.log(Level.INFO, "A aula não existe.");
             }
         }
 
@@ -103,10 +105,8 @@ public class CalendarApp extends Application {
     public void loadData() {
         for (JsonNode event : events) {
             //System.out.println(event);
-            if (event != null) {
-                if(!(courses.contains(event.get("﻿Curso").asText())) || courses.isEmpty() ){
-                    courses.add((event.get("﻿Curso").asText()));
-                }
+            if ((event != null) &&  (!(courses.contains(event.get("﻿Curso").asText())) || courses.isEmpty())){
+                courses.add((event.get("﻿Curso").asText()));
             }
         }
     }

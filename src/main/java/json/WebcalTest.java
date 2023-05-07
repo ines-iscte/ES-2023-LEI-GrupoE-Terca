@@ -24,10 +24,9 @@ class WebcalTest {
     }
 
     @Test
-    public void webcal2() throws JsonProcessingException {
+    public void webcal2() throws JsonProcessingException, IOException {
         String[] targets = {"aulas", "summary", "start", "end"};
         boolean exists=true;
-        try {
             BufferedReader br = new BufferedReader(new FileReader(filePath));
             String line;
             while((line = br.readLine()) != null) {
@@ -39,8 +38,6 @@ class WebcalTest {
                 }
             }
             br.close();
-        } catch(IOException e) {
-        }
         assertTrue(exists);
     }
 }
